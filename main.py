@@ -24,7 +24,7 @@ def real_time_price(stock_code):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
     try:
         r = requests.get(url, headers=headers)
-        #print(r)  # Check response
+        print(r)  # Check response
         if r.status_code == 404:
             return "Page not found"
         elif r.status_code != 200:
