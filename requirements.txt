@@ -1,3 +1,5 @@
-pandas
-requests
 beautifulsoup4==4.12.3
+Flask
+gunicorn
+requests
+lxml
