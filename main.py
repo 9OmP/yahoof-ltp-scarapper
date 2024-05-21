@@ -1,9 +1,10 @@
-import pandas as pd
+from flask import Flask, jsonify
 import requests
-import time
 from bs4 import BeautifulSoup
-import datetime
 from requests.exceptions import ConnectionError
+import datetime
+
+app = Flask(__name__)
 
 def web_content_div(web_content, class_path):
     web_content_div = web_content.find_all('div', {'class': class_path})
@@ -17,22 +18,28 @@ def web_content_div(web_content, class_path):
 
 def real_time_price(stock_code):
     url = 'https://finance.yahoo.com/quote/' + stock_code
-    # print(url)
     try:
         r = requests.get(url)
         web_content = BeautifulSoup(r.text, 'lxml')
-        texts = web_content_div(web_content, 'container svelte-aay0dk')
+        # Update the 'class_path' with the correct class if necessary
+        texts = web_content_div(web_content, 'My(6px) Pos(r) smartphone_Mt(6px)')  # placeholder class, adjust as needed
         if texts != []:
-            price= texts[0]
+            price = texts[0]
         else:
-            price = []
+            price = "Price not found"
     except ConnectionError:
-        price
+        price = "Failed to connect"
     return price
 
-Stock = ['BTC-USD']
+@app.route('/')
+def home():
+    return "Welcome to the Stock Price API!"
 
-while True:
-    now = datetime.datetime.now().strftime("%H:%M:%S")
-    print("Current price of", Stock[0], "is:", real_time_price(Stock[0]), f"at {now}")
-    time.sleep(30)  # Fetch data every x seconds
+@app.route('/price/<stock_code>')
+def price(stock_code):
+    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    price = real_time_price(stock_code)
+    return jsonify({'stock': stock_code, 'price': price, 'timestamp': now})
+
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=True)
