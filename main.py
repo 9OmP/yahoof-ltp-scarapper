@@ -18,17 +18,17 @@ def web_content_div(web_content, class_path):
 
 def real_time_price(stock_code):
     url = 'https://finance.yahoo.com/quote/' + stock_code
+    # print(url)
     try:
         r = requests.get(url)
         web_content = BeautifulSoup(r.text, 'lxml')
-        # Update the 'class_path' with the correct class if necessary
-        texts = web_content_div(web_content, 'My(6px) Pos(r) smartphone_Mt(6px)')  # placeholder class, adjust as needed
+        texts = web_content_div(web_content, 'container svelte-aay0dk')
         if texts != []:
-            price = texts[0]
+            price= texts[0]
         else:
-            price = "Price not found"
+            price = []
     except ConnectionError:
-        price = "Failed to connect"
+        price
     return price
 
 @app.route('/')
